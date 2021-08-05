@@ -8,7 +8,7 @@ const typeDefs = gql`
     }
 
     type Page {
-        _id: ID!,
+        _id: String,
         name: String,
         url: String,
         description: String,
@@ -16,7 +16,7 @@ const typeDefs = gql`
         textResources: [TextResource]
     }
 
-    type MetaData {
+    type Metadata {
         _id: String,
         type: String,
         maxLength: Int,
@@ -25,10 +25,10 @@ const typeDefs = gql`
     }
 
     type TextResource {
-        _id: ID!,
+        _id: String,
         value: String,
         pageId: String,
-        metadata: [MetaData]
+        metadata: [Metadata]
     }
 
     type Query {
@@ -36,14 +36,15 @@ const typeDefs = gql`
         page (id: String): Page,
         textResources: [TextResource],
         textResource (id: String): TextResource,
-        metaData (id: String): MetaData,
+        metadata (id: String): Metadata,
         pageResources(pageId: String!): [TextResource]
+        textMetadata (textResourceId: String!): Metadata
     }
 
     type Mutation {
         addPage (name: String, url: String): Page,
         addTextResource (value: String, pageId: String): TextResource
-        addMetaData (type: String, maxLength: Int, textProperty: TextProperty, textResourceId: String): MetaData
+        addMetadata (type: String, maxLength: Int, textProperty: TextProperty, textResourceId: String): Metadata
     }
 
     type Subscription {

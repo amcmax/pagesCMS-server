@@ -1,4 +1,4 @@
-const { Page, MetaData, TextResource } = require('./models')
+const { Page, Metadata, TextResource } = require('./models')
 const pubsub = require('./pubsub')
 const { withFilter } = require('apollo-server-express');
 
@@ -51,6 +51,15 @@ const resolvers = {
               console.error(err)
           })
     },
+    textMetadata (parent, args, context, info) {
+        return MetaData.find({ textResourceId: args.textResourceId })
+            .then (metadata => {
+                return { ...metadata._doc }
+            })
+            .catch (err => {
+                console.error(err)
+            })
+      },
   },
   Mutation: {
       addPage (parent, args, context, info) {
@@ -87,25 +96,19 @@ const resolvers = {
                 console.error(err)
             })
     },
-    addMetaData (parent, args, context, info) {
+    addMetadata (parent, args, context, info) {
       const { type, textResourceId, maxLength, textProperty } = args
-      const metaDataObj = new MetaData({
+      const metadataObj = new Metadata({
           type,
           textResourceId,
           maxLength,
           textProperty
       })
-      return metaDataObj.save()
+      return metadataObj.save()
           .then (result => {
-            TextResource.update(
-                {_id: textResourceId},
-                {$push: {posts: newPost}},
-                function(error, results) {
-                //handle error and check results
-                });
-              const metaData = { ...result._doc }
-              pubsub.publish('NEW_METADATA', { newMetaData: metaData });
-              return metaData
+              const metadata = { ...result._doc }
+              pubsub.publish('NEW_METADATA', { newMetadata: metadata });
+              return metadata
           })
           .catch (err => {
               console.error(err)

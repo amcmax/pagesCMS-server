@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 const { Schema } = mongoose
 
-const MetaDataSchema = new Schema({
+const MetadataSchema = new Schema({
   type: {
       type: String,
       required: true
@@ -32,19 +32,11 @@ const TextResourceSchema = new Schema({
     ref: 'Page',
     required: true
   },
-  metaData: [{ type: {
-    type: String,
-    required: true
-    },
-    maxLength: {
-        type: Number,
-        required: false
-    },
-    textProperty: {
-      type: String,
-      enum: ['SINGLELINE', 'MULTILINE'],
-      required: false
-    } }]
+  metadata: [
+    { 
+      type: Schema.Types.ObjectId, 
+      ref: 'Metadata' }
+  ]
   })
 
 const PageSchema = new Schema({
@@ -73,10 +65,10 @@ const PageSchema = new Schema({
 
 const Page = mongoose.model('Page', PageSchema) 
 const TextResource = mongoose.model('TextResource', TextResourceSchema)
-const MetaData = mongoose.model('MetaData', MetaDataSchema)
+const Metadata = mongoose.model('Metadata', MetadataSchema)
 
 module.exports = {
     Page, 
     TextResource,
-    MetaData
+    Metadata
 }
