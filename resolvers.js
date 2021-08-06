@@ -5,8 +5,7 @@ const { withFilter } = require('apollo-server-express');
 const resolvers = {
   Query: {
     pages (parent, args, context, info) {
-      return Page.find({}, {limit: 10, sort:{ _id: -1}})
-      .populate({ path: 'textResources', model: TextResource })
+      return Page.find().sort({_id:-1}).limit(10)
           .then (page => {
               return page.map (p => ({ ...p._doc }))
           })

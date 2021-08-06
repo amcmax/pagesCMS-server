@@ -31,12 +31,7 @@ const TextResourceSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'Page',
     required: true
-  },
-  metadata: [
-    { 
-      type: Schema.Types.ObjectId, 
-      ref: 'Metadata' }
-  ]
+  }
   })
 
 const PageSchema = new Schema({
@@ -55,12 +50,7 @@ const PageSchema = new Schema({
     screenImage: {
       type: String,
       required: false
-    },
-    textResources: [
-      { 
-        type: Schema.Types.ObjectId, 
-        ref: 'TextResource' }
-    ]
+    }
 })
 
 const Page = mongoose.model('Page', PageSchema) 

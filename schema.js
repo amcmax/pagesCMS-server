@@ -28,7 +28,6 @@ const typeDefs = gql`
         _id: String,
         value: String,
         pageId: String,
-        metadata: [Metadata]
     }
 
     type Query {
