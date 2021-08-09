@@ -14,7 +14,7 @@ const resolvers = {
           })
     },
     page (parent, args, context, info) {
-      return Page.findOne({ _id: args.id })
+      return Page.findOne({ url: args.url })
       .populate({ path: 'textResources', model: TextResource })
           .then (page => {
               return { ...page._doc }
@@ -72,7 +72,7 @@ const resolvers = {
           return pageObj.save()
               .then (result => {
                   const page = { ...result._doc }
-                  pubsub.publish('NEW_PAGE', { newPage: page })
+                //   pubsub.publish('NEW_PAGE', { newPage: page })
                   return page
               })
               .catch (err => {

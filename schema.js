@@ -32,7 +32,7 @@ const typeDefs = gql`
 
     type Query {
         pages: [Page],
-        page (id: String): Page,
+        page (url: String): Page,
         textResources: [TextResource],
         textResource (id: String): TextResource,
         metadata (id: String): Metadata,
@@ -41,7 +41,7 @@ const typeDefs = gql`
     }
 
     type Mutation {
-        addPage (name: String, url: String): Page,
+        addPage (name: String, url: String, description: String): Page,
         addTextResource (value: String, pageId: String): TextResource
         addMetadata (type: String, maxLength: Int, textProperty: TextProperty, textResourceId: String): Metadata
     }
