@@ -1,56 +1,73 @@
-const { gql, makeExecutableSchema } = require('apollo-server-express')
+const { gql, makeExecutableSchema } = require("apollo-server-express");
 
 const typeDefs = gql`
-
-    enum TextProperty {
+  enum TextProperty {
     SINGLELINE
-    MULTILINE 
-    }
+    MULTILINE
+  }
 
-    type Page {
-        _id: String,
-        name: String,
-        url: String,
-        description: String,
-        screenImage: String,
-        textResources: [TextResource]
-    }
+  type Page {
+    _id: String
+    name: String
+    url: String
+    description: String
+    screenImage: String
+    elementsCount: Int
+    textResources: [TextResource]
+  }
 
-    type Metadata {
-        _id: String,
-        type: String,
-        maxLength: Int,
-        textProperty: TextProperty,
-        textResourceId: String
-    }
+  type Metadata {
+    _id: String
+    type: String
+    maxLength: Int
+    textProperty: TextProperty
+    textResourceId: String
+  }
 
-    type TextResource {
-        _id: String,
-        value: String,
-        pageId: String,
-    }
+  input MetadataInput {
+    type: String
+    maxLength: Int
+    textProperty: TextProperty
+  }
 
-    type Query {
-        pages: [Page],
-        page (url: String): Page,
-        textResources: [TextResource],
-        textResource (id: String): TextResource,
-        metadata (id: String): Metadata,
-        pageResources(pageId: String!): [TextResource]
-        textMetadata (textResourceId: String!): Metadata
-    }
+  type TextResource {
+    _id: String
+    value: String
+    pageId: String
+    metadata: [Metadata]
+  }
 
-    type Mutation {
-        addPage (name: String, url: String, description: String): Page,
-        addTextResource (value: String, pageId: String): TextResource
-        addMetadata (type: String, maxLength: Int, textProperty: TextProperty, textResourceId: String): Metadata
-    }
+  type ImageResource {
+    _id: String
+    url: String
+    pageId: String
+    metadata: [Metadata]
+  }
 
-    type Subscription {
-        getPages: Page
-        newTextResource (pageId: String): TextResource,
-        newPage (pageId: String): Page,
-    }
-`
+  union Resource = TextResource | ImageResource
 
-module.exports = typeDefs
+  type Query {
+    pages: [Page]
+    page(url: String): Page
+    textResources: [TextResource]
+    textResource(id: String): TextResource
+    pageResources(pageId: String!): [Resource]
+  }
+
+  type Mutation {
+    addPage(name: String, url: String, description: String): Page
+    addTextResource(
+      value: String
+      pageId: String
+      metadata: MetadataInput
+    ): TextResource
+  }
+
+  type Subscription {
+    getPages: Page
+    newTextResource(pageId: String): TextResource
+    newPage(pageId: String): Page
+  }
+`;
+
+module.exports = typeDefs;
