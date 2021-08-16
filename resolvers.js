@@ -2,16 +2,17 @@ const { Page, Metadata, TextResource } = require("./models");
 const pubsub = require("./pubsub");
 const { withFilter } = require("apollo-server-express");
 
-const textResources = (pageId) => {
-  return TextResource.find({ pageId: pageId })
-    .sort({ _id: -1 })
-    .limit(100)
-    .then((textResource) => {
-      return textResource.map((text) => ({ ...text._doc }));
-    })
-    .catch((err) => {
-      console.error(err);
+const textResources = async (pageId) => {
+  try {
+    const texts = await TextResource.find({ pageId: pageId })
+      .sort({ _id: -1 })
+      .limit(100);
+    return texts.map((text) => {
+      return { ...text._doc };
     });
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 const resolvers = {
