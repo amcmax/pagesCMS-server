@@ -1,6 +1,7 @@
-const { Page, Metadata, TextResource } = require("./models");
+const { TextResource } = require("./models");
 const pubsub = require("./pubsub");
 const { withFilter } = require("apollo-server-express");
+const { Page } = require("./models/Page");
 
 const textResources = async (pageId) => {
   try {
@@ -27,60 +28,50 @@ const resolvers = {
       return null;
     },
   },
+
   Query: {
-    pages(parent, args, context, info) {
-      return Page.find()
+    pages: async () => {
+      const pages = await Page.find()
         .populate("elementsCount")
         .sort({ _id: -1 })
-        .limit(100)
-        .then((page) => {
-          return page.map((page) => ({
-            ...page._doc,
-            elementsCount: page.elementsCount,
-            textResources: textResources.bind(this, page._doc._id),
-          }));
-        })
-        .catch((err) => {
-          console.error(err);
-        });
+        .limit(100);
+      return pages.map((page) => ({
+        ...page._doc,
+        elementsCount: page.elementsCount,
+        textResources: textResources.bind(this, page._doc._id),
+      }));
     },
 
-    page(parent, args, context, info) {
-      return Page.findOne({ url: args.url })
-        .populate("elementsCount")
-        .then((page) => {
-          return {
-            ...page._doc,
-            elementsCount: page.elementsCount,
-            textResources: textResources.bind(this, page._doc._id),
-          };
-        });
+    page: async (parent, args, context, info) => {
+      const page = await Page.findOne({ url: args.url }).populate(
+        "elementsCount"
+      );
+      return {
+        ...page._doc,
+        elementsCount: page.elementsCount,
+        textResources: textResources.bind(this, page._doc._id),
+      };
     },
 
-    textResources(parent, args, context, info) {
-      return TextResource.find()
+    textResources: async () => {
+      const textResources = await TextResource.find()
         .sort({ _id: -1 })
-        .limit(10)
-        .then((textResource) => {
-          return textResource.map((text) => ({ ...text._doc }));
-        })
-        .catch((err) => {
-          console.error(err);
-        });
+        .limit(10);
+      return textResources.map((textResource) => ({
+        ...textResource._doc,
+      }));
     },
 
-    textResource(parent, args, context, info) {
-      return TextResource.findOne({ _id: args.id })
-        .then((textResource) => {
-          return { ...textResource._doc };
-        })
-        .catch((err) => {
-          console.error(err);
-        });
+    textResource: async (parent, args, context, info) => {
+      const textResource = await TextResource.findOne({ _id: args.id });
+      return {
+        ...textResource._doc,
+      };
     },
 
-    pageResources(parent, args, context, info) {
-      return textResources(args.pageId);
+    pageResources: async (parent, args, context, info) => {
+      const pageResources = await textResources(args.pageId);
+      return pageResources;
     },
   },
 
