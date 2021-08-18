@@ -38,10 +38,16 @@ const typeDefs = gql`
     screenImage: String
   }
 
+  input TextResourceInput {
+    value: String
+    metadata: MetadataInput
+  }
+
   type TextResource {
     _id: String
     value: String
     pageId: String
+    updatedAt: String
     metadata: [Metadata]
   }
 
@@ -67,6 +73,11 @@ const typeDefs = gql`
     addPage(name: String, url: String, description: String): Page
     updatePage(pageId: String!, page: PageInput!): Page
     deletePage(pageId: String): Page
+    updateTextResource(
+      textResourceId: String!
+      textResource: TextResourceInput!
+    ): TextResource
+    deleteTextResource(textResourceId: String): TextResource
     addTextResource(
       value: String
       pageId: String

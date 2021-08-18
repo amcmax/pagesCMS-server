@@ -32,6 +32,10 @@ const TextResourceSchema = new Schema({
     ref: "Page",
     required: true,
   },
+  updatedAt: {
+    type: String,
+    required: false,
+  },
   metadata: [MetadataSchema],
 });
 

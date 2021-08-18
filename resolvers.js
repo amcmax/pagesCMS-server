@@ -130,6 +130,7 @@ const resolvers = {
         {
           $set: {
             ...args.page,
+            updatedAt: new Date().toISOString(),
           },
         }
       );
@@ -141,6 +142,26 @@ const resolvers = {
 
     deletePage: async (parent, args, context) => {
       await Page.deleteOne({ _id: args.pageId });
+    },
+
+    updateTextResource: async (parent, args, context) => {
+      await TextResource.updateOne(
+        { _id: args.textResourceId },
+        {
+          $set: {
+            ...args.textResource,
+            updatedAt: new Date().toISOString(),
+          },
+        }
+      );
+
+      return {
+        _id: args.textResourceId,
+      };
+    },
+
+    deleteTextResource: async (parent, args, context) => {
+      await TextResource.deleteOne({ _id: args.textResourceId });
     },
   },
 
