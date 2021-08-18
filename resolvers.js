@@ -42,8 +42,19 @@ const resolvers = {
       }));
     },
 
-    page: async (parent, args, context, info) => {
+    pageByUrl: async (parent, args, context, info) => {
       const page = await Page.findOne({ url: args.url }).populate(
+        "elementsCount"
+      );
+      return {
+        ...page._doc,
+        elementsCount: page.elementsCount,
+        textResources: textResources.bind(this, page._doc._id),
+      };
+    },
+
+    pageById: async (parent, args, context, info) => {
+      const page = await Page.findOne({ _id: args.pageId }).populate(
         "elementsCount"
       );
       return {
@@ -111,6 +122,25 @@ const resolvers = {
         .catch((err) => {
           console.error(err);
         });
+    },
+
+    updatePage: async (parent, args, context) => {
+      await Page.updateOne(
+        { _id: args.pageId },
+        {
+          $set: {
+            ...args.page,
+          },
+        }
+      );
+
+      return {
+        _id: args.pageId,
+      };
+    },
+
+    deletePage: async (parent, args, context) => {
+      await Page.deleteOne({ _id: args.pageId });
     },
   },
 

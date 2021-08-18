@@ -19,6 +19,10 @@ const PageSchema = new Schema(
       type: String,
       required: false,
     },
+    updatedAt: {
+      type: String,
+      required: false,
+    },
     textResources: [{ type: Schema.Types.ObjectId, ref: "TextResource" }],
   },
   {

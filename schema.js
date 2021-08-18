@@ -11,6 +11,7 @@ const typeDefs = gql`
     name: String
     url: String
     description: String
+    updatedAt: String
     screenImage: String
     elementsCount: Int
     textResources: [TextResource]
@@ -28,6 +29,13 @@ const typeDefs = gql`
     type: String
     maxLength: Int
     textProperty: TextProperty
+  }
+
+  input PageInput {
+    name: String
+    url: String
+    description: String
+    screenImage: String
   }
 
   type TextResource {
@@ -48,7 +56,8 @@ const typeDefs = gql`
 
   type Query {
     pages: [Page]
-    page(url: String): Page
+    pageByUrl(url: String): Page
+    pageById(pageId: String): Page
     textResources: [TextResource]
     textResource(id: String): TextResource
     pageResources(pageId: String!): [Resource]
@@ -56,6 +65,8 @@ const typeDefs = gql`
 
   type Mutation {
     addPage(name: String, url: String, description: String): Page
+    updatePage(pageId: String!, page: PageInput!): Page
+    deletePage(pageId: String): Page
     addTextResource(
       value: String
       pageId: String
