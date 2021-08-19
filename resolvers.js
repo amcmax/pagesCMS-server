@@ -1,7 +1,6 @@
-const { TextResource } = require("./models");
-const pubsub = require("./pubsub");
 const { withFilter } = require("apollo-server-express");
 const { Page } = require("./models/Page");
+const { TextResource } = require("./models/TextResource");
 
 const textResources = async (pageId) => {
   try {

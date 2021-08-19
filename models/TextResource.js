@@ -42,9 +42,7 @@ const TextResourceSchema = new Schema({
 TextResourceSchema.index({ pageId: 1 });
 
 const TextResource = mongoose.model("TextResource", TextResourceSchema);
-const Metadata = mongoose.model("Metadata", MetadataSchema);
 
 module.exports = {
   TextResource,
-  Metadata,
 };
